@@ -623,7 +623,6 @@ export default function ContentPage() {
               </span>
 
             </footer>
-
           </div>
         </div>
       </div>

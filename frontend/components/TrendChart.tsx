@@ -10,23 +10,26 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface TopicChartProps {
+interface TrendChartProps {
   data: {
-    topic: string;
+    month?: string;
+    topic?: string;
     performance: number;
   }[];
 }
 
-export default function TopicChart({ data }: TopicChartProps) {
+export default function TrendChart({ data }: TrendChartProps) {
+  const xKey = data.length > 0 && data[0].month !== undefined ? "month" : "topic";
+
   return (
     <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6 shadow-sm">
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-white">
-          Topic Performance
+          Performance Trends
         </h2>
 
         <p className="mt-1 text-sm text-gray-400">
-          Average performance across content topics.
+          Monthly performance trajectory across recent publications.
         </p>
       </div>
 
@@ -39,7 +42,7 @@ export default function TopicChart({ data }: TopicChartProps) {
             />
 
             <XAxis
-              dataKey="topic"
+              dataKey={xKey}
               tick={{ fill: "#9CA3AF", fontSize: 12 }}
               axisLine={{ stroke: "#4B5563" }}
               tickLine={{ stroke: "#4B5563" }}
