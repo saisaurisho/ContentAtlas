@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-import { redirect } from "next/navigation";
 
-export default function Home() {
-  redirect("/dashboard");
-}
-
-=======
 "use client";
 
 import Link from "next/link";
@@ -803,4 +796,3 @@ function MemoryCard({
     </div>
   );
 }
->>>>>>> d3912e4 (Added content)

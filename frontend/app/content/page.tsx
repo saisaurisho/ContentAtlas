@@ -1,78 +1,8 @@
-<<<<<<< HEAD
-import Sidebar from "@/components/Sidebar";
-import { contentData } from "@/lib/mockData";
-
-export default function ContentPage() {
-  return (
-    <main className="min-h-screen bg-gray-50 pl-64">
-      <Sidebar />
-
-      <div className="p-8">
-        <div className="mx-auto max-w-6xl space-y-6">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-wider text-gray-500">
-              Content Catalog
-            </p>
-
-            <h1 className="mt-1 text-3xl font-bold text-gray-900">
-              Content History & Performance
-            </h1>
-
-            <p className="mt-1 text-sm text-gray-600">
-              Tracked publication performance history indexed for ContentAtlas memory retrieval.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-            <table className="w-full text-left text-sm text-gray-600">
-              <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-4">Title</th>
-                  <th className="px-6 py-4">Topic</th>
-                  <th className="px-6 py-4">Type</th>
-                  <th className="px-6 py-4">Source</th>
-                  <th className="px-6 py-4">Date</th>
-                  <th className="px-6 py-4">Performance</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {contentData.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50/80 transition">
-                    <td className="px-6 py-4 font-semibold text-gray-900">{item.title}</td>
-                    <td className="px-6 py-4">
-                      <span className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700 border border-indigo-100">
-                        {item.topic}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">{item.type}</td>
-                    <td className="px-6 py-4">{item.source}</td>
-                    <td className="px-6 py-4 text-xs text-gray-500">{item.publicationDate}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-16 bg-gray-200 rounded-full h-2 overflow-hidden">
-                          <div
-                            className={`h-full ${
-                              item.performance >= 80
-                                ? "bg-emerald-500"
-                                : item.performance >= 60
-                                ? "bg-amber-500"
-                                : "bg-red-500"
-                            }`}
-                            style={{ width: `${item.performance}%` }}
-                          />
-                        </div>
-                        <span className="font-bold text-xs text-gray-800">{item.performance}%</span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-=======
 "use client";
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+
 import {
   Activity,
   ArrowUpRight,
@@ -89,6 +19,7 @@ import {
 } from "lucide-react";
 
 type ContentItem = {
+  id: string;
   title: string;
   topic: string;
   type: string;
@@ -101,6 +32,7 @@ type ContentItem = {
 
 const contentData: ContentItem[] = [
   {
+    id: "1",
     title: "Building Production-Ready AI Agents",
     topic: "AI Agents",
     type: "Technical Guide",
@@ -111,6 +43,7 @@ const contentData: ContentItem[] = [
     views: "18.4K",
   },
   {
+    id: "2",
     title: "10 Developer Tools You Should Know",
     topic: "Developer Tools",
     type: "Blog",
@@ -121,6 +54,7 @@ const contentData: ContentItem[] = [
     views: "14.7K",
   },
   {
+    id: "3",
     title: "Automating Your Engineering Workflow",
     topic: "Automation",
     type: "Tutorial",
@@ -131,6 +65,7 @@ const contentData: ContentItem[] = [
     views: "12.2K",
   },
   {
+    id: "4",
     title: "AI Agents for Cybersecurity Teams",
     topic: "Cybersecurity",
     type: "Research",
@@ -141,6 +76,7 @@ const contentData: ContentItem[] = [
     views: "—",
   },
   {
+    id: "5",
     title: "Understanding LLM Tool Calling",
     topic: "AI Agents",
     type: "Technical Guide",
@@ -151,6 +87,7 @@ const contentData: ContentItem[] = [
     views: "16.8K",
   },
   {
+    id: "6",
     title: "The Future of Generic AI News",
     topic: "AI News",
     type: "Article",
@@ -161,6 +98,7 @@ const contentData: ContentItem[] = [
     views: "21.3K",
   },
   {
+    id: "7",
     title: "Building Reliable RAG Pipelines",
     topic: "AI Agents",
     type: "Tutorial",
@@ -171,6 +109,7 @@ const contentData: ContentItem[] = [
     views: "11.9K",
   },
   {
+    id: "8",
     title: "AI + Finance: What Developers Need to Know",
     topic: "Finance",
     type: "Article",
@@ -207,10 +146,13 @@ export default function ContentPage() {
   const [type, setType] = useState("All Types");
 
   const filteredContent = useMemo(() => {
+    const searchValue = search.toLowerCase().trim();
+
     return contentData.filter((item) => {
       const matchesSearch =
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.topic.toLowerCase().includes(search.toLowerCase());
+        searchValue === "" ||
+        item.title.toLowerCase().includes(searchValue) ||
+        item.topic.toLowerCase().includes(searchValue);
 
       const matchesTopic =
         topic === "All Topics" || item.topic === topic;
@@ -229,7 +171,7 @@ export default function ContentPage() {
         {/* SIDEBAR */}
         <aside className="hidden w-64 shrink-0 border-r border-white/[0.07] bg-[#0a0e16] lg:flex lg:flex-col">
 
-          {/* Logo */}
+          {/* LOGO */}
           <div className="border-b border-white/[0.07] px-5 py-5">
             <Link href="/" className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400">
@@ -248,9 +190,8 @@ export default function ContentPage() {
             </Link>
           </div>
 
-          {/* Navigation */}
+          {/* NAVIGATION */}
           <div className="px-3 py-5">
-
             <p className="mb-3 px-3 text-[9px] font-medium uppercase tracking-[0.2em] text-white/20">
               Workspace
             </p>
@@ -287,7 +228,7 @@ export default function ContentPage() {
             />
           </div>
 
-          {/* Memory */}
+          {/* MEMORY STATUS */}
           <div className="mt-auto p-4">
             <div className="rounded-2xl border border-violet-400/10 bg-violet-500/[0.07] p-4">
 
@@ -304,7 +245,10 @@ export default function ContentPage() {
                 strategic decisions.
               </p>
 
-              <button className="mt-4 flex items-center gap-1 text-[11px] text-violet-300">
+              <button
+                type="button"
+                className="mt-4 flex items-center gap-1 text-[11px] text-violet-300"
+              >
                 Explore memory
                 <ArrowUpRight className="h-3 w-3" />
               </button>
@@ -341,7 +285,6 @@ export default function ContentPage() {
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 text-[10px] font-semibold">
                 NS
               </div>
-
             </div>
           </header>
 
@@ -353,13 +296,15 @@ export default function ContentPage() {
 
               <div>
                 <div className="flex items-center gap-2">
+
                   <h2 className="text-2xl font-semibold tracking-tight">
                     Your Content
                   </h2>
 
                   <span className="rounded-full border border-white/[0.07] bg-white/[0.04] px-2 py-1 text-[9px] text-white/35">
-                    127 total
+                    {contentData.length} total
                   </span>
+
                 </div>
 
                 <p className="mt-2 max-w-xl text-xs leading-5 text-white/30">
@@ -368,7 +313,10 @@ export default function ContentPage() {
                 </p>
               </div>
 
-              <button className="flex w-fit items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-semibold text-black transition hover:bg-white/90">
+              <button
+                type="button"
+                className="flex w-fit items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-semibold text-black transition hover:bg-white/90"
+              >
                 <Plus className="h-4 w-4" />
                 Add Content
               </button>
@@ -438,7 +386,10 @@ export default function ContentPage() {
 
                 </div>
 
-                <button className="flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] text-white/60">
+                <button
+                  type="button"
+                  className="flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] text-white/60"
+                >
                   Analyze pattern
                   <ArrowUpRight className="h-3 w-3" />
                 </button>
@@ -451,7 +402,7 @@ export default function ContentPage() {
 
               <div className="flex flex-col gap-3 lg:flex-row">
 
-                {/* Search */}
+                {/* SEARCH */}
                 <div className="relative flex-1">
 
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/25" />
@@ -465,7 +416,7 @@ export default function ContentPage() {
 
                 </div>
 
-                {/* Topic */}
+                {/* TOPIC */}
                 <div className="relative">
 
                   <select
@@ -474,7 +425,9 @@ export default function ContentPage() {
                     className="h-10 min-w-[160px] appearance-none rounded-xl border border-white/[0.07] bg-[#0b0f17] px-4 pr-9 text-xs text-white/60 outline-none"
                   >
                     {topics.map((item) => (
-                      <option key={item}>{item}</option>
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
                     ))}
                   </select>
 
@@ -482,7 +435,7 @@ export default function ContentPage() {
 
                 </div>
 
-                {/* Type */}
+                {/* TYPE */}
                 <div className="relative">
 
                   <select
@@ -491,7 +444,9 @@ export default function ContentPage() {
                     className="h-10 min-w-[160px] appearance-none rounded-xl border border-white/[0.07] bg-[#0b0f17] px-4 pr-9 text-xs text-white/60 outline-none"
                   >
                     {types.map((item) => (
-                      <option key={item}>{item}</option>
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
                     ))}
                   </select>
 
@@ -499,7 +454,10 @@ export default function ContentPage() {
 
                 </div>
 
-                <button className="flex h-10 items-center justify-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 text-xs text-white/50">
+                <button
+                  type="button"
+                  className="flex h-10 items-center justify-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 text-xs text-white/50"
+                >
                   <Filter className="h-3.5 w-3.5" />
                   More Filters
                 </button>
@@ -527,7 +485,10 @@ export default function ContentPage() {
                   </p>
                 </div>
 
-                <button className="flex items-center gap-2 rounded-lg border border-white/[0.07] px-3 py-2 text-[10px] text-white/40">
+                <button
+                  type="button"
+                  className="flex items-center gap-2 rounded-lg border border-white/[0.07] px-3 py-2 text-[10px] text-white/40"
+                >
                   Sort by
                   <ChevronDown className="h-3 w-3" />
                 </button>
@@ -577,7 +538,7 @@ export default function ContentPage() {
                     {filteredContent.length > 0 ? (
                       filteredContent.map((item) => (
                         <ContentRow
-                          key={item.title}
+                          key={item.id}
                           item={item}
                         />
                       ))
@@ -615,19 +576,31 @@ export default function ContentPage() {
 
                 <div className="flex gap-2">
 
-                  <button className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/25">
+                  <button
+                    type="button"
+                    className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/25"
+                  >
                     Previous
                   </button>
 
-                  <button className="rounded-lg border border-white/[0.07] bg-white/[0.05] px-3 py-1.5 text-[10px] text-white/60">
+                  <button
+                    type="button"
+                    className="rounded-lg border border-white/[0.07] bg-white/[0.05] px-3 py-1.5 text-[10px] text-white/60"
+                  >
                     1
                   </button>
 
-                  <button className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/40">
+                  <button
+                    type="button"
+                    className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/40"
+                  >
                     2
                   </button>
 
-                  <button className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/40">
+                  <button
+                    type="button"
+                    className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/40"
+                  >
                     Next
                   </button>
 
@@ -651,18 +624,16 @@ export default function ContentPage() {
 
             </footer>
 
->>>>>>> d3912e4 (Added content)
           </div>
         </div>
       </div>
     </main>
   );
 }
-<<<<<<< HEAD
-=======
 
-
-/* ---------------- COMPONENTS ---------------- */
+/* =========================================================
+   NAV ITEM
+========================================================= */
 
 function NavItem({
   href,
@@ -693,6 +664,9 @@ function NavItem({
   );
 }
 
+/* =========================================================
+   STAT CARD
+========================================================= */
 
 function StatCard({
   icon,
@@ -734,6 +708,9 @@ function StatCard({
   );
 }
 
+/* =========================================================
+   CONTENT ROW
+========================================================= */
 
 function ContentRow({
   item,
@@ -743,7 +720,7 @@ function ContentRow({
   return (
     <tr className="group border-b border-white/[0.04] transition hover:bg-white/[0.025]">
 
-      {/* Content */}
+      {/* CONTENT */}
       <td className="px-5 py-4">
 
         <div className="flex items-center gap-3">
@@ -768,7 +745,7 @@ function ContentRow({
 
       </td>
 
-      {/* Topic */}
+      {/* TOPIC */}
       <td className="py-4">
 
         <span className="rounded-md bg-white/[0.04] px-2 py-1 text-[9px] text-white/40">
@@ -777,7 +754,7 @@ function ContentRow({
 
       </td>
 
-      {/* Type */}
+      {/* TYPE */}
       <td className="py-4">
 
         <span className="text-[10px] text-white/35">
@@ -786,24 +763,22 @@ function ContentRow({
 
       </td>
 
-      {/* Status */}
+      {/* STATUS */}
       <td className="py-4">
-
         <StatusBadge status={item.status} />
-
       </td>
 
-      {/* Date */}
+      {/* DATE */}
       <td className="py-4 text-[10px] text-white/30">
         {item.date}
       </td>
 
-      {/* Views */}
+      {/* VIEWS */}
       <td className="py-4 text-[10px] text-white/40">
         {item.views}
       </td>
 
-      {/* Engagement */}
+      {/* ENGAGEMENT */}
       <td className="px-5 py-4 text-right">
 
         {item.engagementValue > 0 ? (
@@ -836,6 +811,9 @@ function ContentRow({
   );
 }
 
+/* =========================================================
+   STATUS BADGE
+========================================================= */
 
 function StatusBadge({
   status,
@@ -858,4 +836,3 @@ function StatusBadge({
     </span>
   );
 }
->>>>>>> d3912e4 (Added content)
