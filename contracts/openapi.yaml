@@ -1,0 +1,435 @@
+openapi: 3.0.3
+info:
+  title: ContentAtlas API
+  description: Content Strategy Agent API - P0 Integration Contract
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local Dev Server
+
+paths:
+  /health:
+    get:
+      summary: Service health check
+      operationId: getHealth
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "ok" }
+                  database: { type: string, example: "connected" }
+                  timestamp: { type: string, format: date-time }
+
+  /api/v1/content:
+    get:
+      summary: List historical content items with metrics and topics
+      operationId: listContent
+      parameters:
+        - name: topic
+          in: query
+          required: false
+          schema: { type: string }
+        - name: content_type
+          in: query
+          required: false
+          schema: { type: string }
+        - name: limit
+          in: query
+          required: false
+          schema: { type: integer, default: 50 }
+        - name: offset
+          in: query
+          required: false
+          schema: { type: integer, default: 0 }
+      responses:
+        "200":
+          description: List of content items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total: { type: integer }
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ContentItemResponse'
+
+  /api/v1/analytics/overview:
+    get:
+      summary: Get high-level content performance overview
+      operationId: getAnalyticsOverview
+      responses:
+        "200":
+          description: Overall performance summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContentOverviewResponse'
+
+  /api/v1/analytics/top-topics:
+    get:
+      summary: Top performing topics ranked by average engagement rate
+      operationId: getTopTopics
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema: { type: integer, default: 5 }
+      responses:
+        "200":
+          description: List of top topic performance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TopicPerformance'
+
+  /api/v1/analytics/content-types:
+    get:
+      summary: Performance breakdown by content format
+      operationId: getContentTypePerformance
+      responses:
+        "200":
+          description: Content type breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContentTypePerformance'
+
+  /api/v1/analytics/gaps:
+    get:
+      summary: Content gaps calculated via deterministic formula
+      operationId: getContentGaps
+      responses:
+        "200":
+          description: Ranked content gaps
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContentGap'
+
+  /api/v1/analytics/trends:
+    get:
+      summary: Topic trajectory and momentum comparison
+      operationId: getTopicTrends
+      responses:
+        "200":
+          description: Topic trends
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TopicTrend'
+
+  /api/v1/analytics/history:
+    get:
+      summary: Monthly publication and engagement historical timeline
+      operationId: getContentHistory
+      responses:
+        "200":
+          description: Historical time series
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoryPoint'
+
+  /api/v1/brand-voice:
+    get:
+      summary: Structured brand voice profile
+      operationId: getBrandVoice
+      responses:
+        "200":
+          description: Brand voice configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrandVoice'
+
+  /api/v1/chat:
+    post:
+      summary: Strategy agent chat endpoint
+      operationId: chatWithAgent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        "200":
+          description: Agent recommendation response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+
+  /api/v1/recommendations:
+    post:
+      summary: Save a strategy recommendation
+      operationId: saveRecommendation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveRecommendationRequest'
+      responses:
+        "201":
+          description: Saved recommendation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recommendation'
+
+  /api/v1/recommendations/{id}/outcome:
+    post:
+      summary: Record an outcome for a recommendation
+      operationId: recordRecommendationOutcome
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordOutcomeRequest'
+      responses:
+        "201":
+          description: Outcome recorded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecommendationOutcome'
+
+components:
+  schemas:
+    ContentItemResponse:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        content_type: { type: string }
+        author: { type: string, nullable: true }
+        published_at: { type: string, format: date-time }
+        topics:
+          type: array
+          items: { type: string }
+        metrics:
+          type: object
+          properties:
+            views: { type: integer, nullable: true }
+            likes: { type: integer, nullable: true }
+            comments: { type: integer, nullable: true }
+            shares: { type: integer, nullable: true }
+            clicks: { type: integer, nullable: true }
+            conversions: { type: integer, nullable: true }
+            engagement_rate: { type: number, nullable: true }
+
+    ContentOverviewResponse:
+      type: object
+      properties:
+        total_content: { type: integer }
+        average_engagement: { type: number, nullable: true }
+        total_views: { type: integer }
+        top_topic: { type: string, nullable: true }
+        top_content_type: { type: string, nullable: true }
+        published_range:
+          type: object
+          properties:
+            start: { type: string, format: date-time, nullable: true }
+            end: { type: string, format: date-time, nullable: true }
+
+    TopicPerformance:
+      type: object
+      properties:
+        topic: { type: string }
+        content_count: { type: integer }
+        average_engagement: { type: number, nullable: true }
+        normalized_score: { type: number }
+        median_views: { type: integer, nullable: true }
+        best_content_type: { type: string, nullable: true }
+        last_published_date: { type: string, format: date-time, nullable: true }
+        evidence_content_ids:
+          type: array
+          items: { type: integer }
+
+    ContentTypePerformance:
+      type: object
+      properties:
+        content_type: { type: string }
+        count: { type: integer }
+        average_engagement: { type: number, nullable: true }
+        average_views: { type: integer, nullable: true }
+
+    ContentGap:
+      type: object
+      properties:
+        topic: { type: string }
+        gap_score: { type: number }
+        reason: { type: string }
+        factors:
+          type: object
+          properties:
+            underrepresentation: { type: number }
+            staleness: { type: number }
+            related_topic_performance: { type: number }
+        evidence_content_ids:
+          type: array
+          items: { type: integer }
+
+    TopicTrend:
+      type: object
+      properties:
+        topic: { type: string }
+        status:
+          type: string
+          enum: [growing, stable, declining, insufficient_data]
+        recent_count: { type: integer }
+        prior_count: { type: integer }
+        change_pct: { type: number, nullable: true }
+
+    HistoryPoint:
+      type: object
+      properties:
+        period: { type: string }
+        content_count: { type: integer }
+        average_engagement: { type: number, nullable: true }
+        views: { type: integer }
+
+    BrandVoice:
+      type: object
+      properties:
+        tone:
+          type: array
+          items: { type: string }
+        preferred_words:
+          type: array
+          items: { type: string }
+        avoid_words:
+          type: array
+          items: { type: string }
+
+    ChatRequest:
+      type: object
+      required: [message]
+      properties:
+        message: { type: string }
+        organization_slug: { type: string, default: "novastack" }
+
+    ChatResponse:
+      type: object
+      required: [answer, intent, recommendation, evidence, memories]
+      properties:
+        answer: { type: string }
+        intent: { type: string, example: "content_recommendation" }
+        recommendation:
+          $ref: '#/components/schemas/Recommendation'
+        evidence:
+          type: object
+          properties:
+            content:
+              type: array
+              items: { type: integer }
+            gaps:
+              type: array
+              items: { type: string }
+            trends:
+              type: array
+              items: { type: string }
+        memories:
+          type: array
+          items:
+            type: object
+            properties:
+              key: { type: string }
+              statement: { type: string }
+              relevance: { type: number, nullable: true }
+
+    SaveRecommendationRequest:
+      type: object
+      required: [title, rationale, target_topic, content_type]
+      properties:
+        organization_slug: { type: string, default: "novastack" }
+        recommendation_type: { type: string, default: "content_creation" }
+        title: { type: string }
+        rationale: { type: string }
+        target_topic: { type: string }
+        content_type: { type: string }
+        supporting_content_ids:
+          type: array
+          items: { type: integer }
+          default: []
+        supporting_memory_refs:
+          type: array
+          items: { type: string }
+          default: []
+        outline:
+          type: array
+          items: { type: string }
+          default: []
+        status: { type: string, default: "pending" }
+
+    Recommendation:
+      type: object
+      properties:
+        id: { type: integer }
+        organization_id: { type: integer }
+        recommendation_type: { type: string }
+        title: { type: string }
+        rationale: { type: string }
+        target_topic: { type: string }
+        content_type: { type: string }
+        supporting_content_ids:
+          type: array
+          items: { type: integer }
+        supporting_memory_refs:
+          type: array
+          items: { type: string }
+        outline:
+          type: array
+          items: { type: string }
+        status: { type: string }
+        created_at: { type: string, format: date-time }
+
+    RecordOutcomeRequest:
+      type: object
+      required: [outcome_type]
+      properties:
+        content_id: { type: integer, nullable: true }
+        outcome_type: { type: string, example: "published" }
+        metrics:
+          type: object
+          properties:
+            views: { type: integer, nullable: true }
+            engagement_rate: { type: number, nullable: true }
+            likes: { type: integer, nullable: true }
+            comments: { type: integer, nullable: true }
+            shares: { type: integer, nullable: true }
+        notes: { type: string, nullable: true }
+
+    RecommendationOutcome:
+      type: object
+      properties:
+        id: { type: integer }
+        recommendation_id: { type: integer }
+        content_id: { type: integer, nullable: true }
+        outcome_type: { type: string }
+        metrics: { type: object }
+        notes: { type: string, nullable: true }
+        recorded_at: { type: string, format: date-time }

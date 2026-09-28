@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -10,53 +10,50 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface TopicChartProps {
+interface TrendChartProps {
   data: {
-    topic?: string;
-    month?: string;
+    month: string;
     performance: number;
   }[];
 }
 
-export default function TopicChart({ data }: TopicChartProps) {
-  const dataKey = data.length > 0 && "month" in data[0] ? "month" : "topic";
-
+export default function TrendChart({ data }: TrendChartProps) {
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6 shadow-sm">
+    <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-6">
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-white">
-          Topic Performance
+          Performance Trend
         </h2>
 
-        <p className="mt-1 text-sm text-gray-400">
-          Average performance across content topics.
+        <p className="mt-1 text-sm text-white/30">
+          Content performance over time.
         </p>
       </div>
 
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data}>
+          <LineChart data={data}>
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="#374151"
+              stroke="#27272a"
             />
 
             <XAxis
-              dataKey={dataKey}
+              dataKey="month"
               tick={{ fill: "#9CA3AF", fontSize: 12 }}
               axisLine={{ stroke: "#4B5563" }}
               tickLine={{ stroke: "#4B5563" }}
             />
 
             <YAxis
-              tick={{ fill: "#9CA3AF" }}
+              tick={{ fill: "#9CA3AF", fontSize: 12 }}
               axisLine={{ stroke: "#4B5563" }}
               tickLine={{ stroke: "#4B5563" }}
             />
 
             <Tooltip
               contentStyle={{
-                backgroundColor: "#111827",
+                backgroundColor: "#111113",
                 border: "1px solid #374151",
                 borderRadius: "12px",
                 color: "#ffffff",
@@ -66,13 +63,16 @@ export default function TopicChart({ data }: TopicChartProps) {
               }}
             />
 
-            <Bar
+            <Line
+              type="monotone"
               dataKey="performance"
               name="Performance"
-              fill="#ffffff"
-              radius={[6, 6, 0, 0]}
+              stroke="#ffffff"
+              strokeWidth={3}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
             />
-          </BarChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>
