@@ -10,16 +10,16 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-interface TopicChartProps {
+interface GapChartProps {
   data: {
     topic: string;
-    performance: number;
+    score: number;
   }[];
 }
 
-export default function TopicChart({ data }: TopicChartProps) {
+export default function GapChart({ data }: GapChartProps) {
   return (
-    <div className="h-80">
+    <div className="h-72">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
@@ -48,7 +48,7 @@ export default function TopicChart({ data }: TopicChartProps) {
           <YAxis
             type="category"
             dataKey="topic"
-            width={120}
+            width={140}
             tick={{ fill: "#a1a1aa", fontSize: 11 }}
             axisLine={false}
             tickLine={false}
@@ -62,14 +62,14 @@ export default function TopicChart({ data }: TopicChartProps) {
               borderRadius: "10px",
               color: "#fff",
             }}
-            formatter={(value) => [`${value}%`, "Performance"]}
+            formatter={(value) => [`${value}%`, "Opportunity"]}
           />
 
           <Bar
-            dataKey="performance"
+            dataKey="score"
             fill="#ffffff"
             radius={[0, 6, 6, 0]}
-            barSize={22}
+            barSize={24}
           />
         </BarChart>
       </ResponsiveContainer>

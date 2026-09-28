@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -22,7 +22,7 @@ export default function TrendChart({ data }: TrendChartProps) {
   const xKey = data.length > 0 && data[0].month !== undefined ? "month" : "topic";
 
   return (
-    <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6 shadow-sm">
+    <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-6">
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-white">
           Performance Trends
@@ -35,10 +35,10 @@ export default function TrendChart({ data }: TrendChartProps) {
 
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data}>
+          <LineChart data={data}>
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="#374151"
+              stroke="#27272a"
             />
 
             <XAxis
@@ -49,14 +49,14 @@ export default function TrendChart({ data }: TrendChartProps) {
             />
 
             <YAxis
-              tick={{ fill: "#9CA3AF" }}
+              tick={{ fill: "#9CA3AF", fontSize: 12 }}
               axisLine={{ stroke: "#4B5563" }}
               tickLine={{ stroke: "#4B5563" }}
             />
 
             <Tooltip
               contentStyle={{
-                backgroundColor: "#111827",
+                backgroundColor: "#111113",
                 border: "1px solid #374151",
                 borderRadius: "12px",
                 color: "#ffffff",
@@ -66,13 +66,16 @@ export default function TrendChart({ data }: TrendChartProps) {
               }}
             />
 
-            <Bar
+            <Line
+              type="monotone"
               dataKey="performance"
               name="Performance"
-              fill="#ffffff"
-              radius={[6, 6, 0, 0]}
+              stroke="#ffffff"
+              strokeWidth={3}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
             />
-          </BarChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </div>
