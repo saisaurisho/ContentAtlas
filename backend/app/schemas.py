@@ -171,3 +171,28 @@ class ChatResponse(BaseModel):
     recommendation: Optional[RecommendationResponse] = None
     evidence: ChatEvidence
     memories: List[ChatMemoryItem] = []
+
+
+# --- Memory API Schemas (Used by Frontend Memory Hub) ---
+class MemoryRetainRequest(BaseModel):
+    content: str
+    memoryType: str = "user_retained"
+    source: str = "manual_input"
+
+
+class MemoryItemSchema(BaseModel):
+    id: str
+    memoryType: str
+    content: str
+    source: str
+    timestamp: Optional[str] = None
+
+
+class MemoryRecallRequest(BaseModel):
+    query: str
+    limit: int = 5
+
+
+class MemoryRecallResponse(BaseModel):
+    memories: List[MemoryItemSchema]
+    query: str

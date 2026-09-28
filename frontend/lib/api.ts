@@ -36,10 +36,49 @@ export async function apiFetch<T>(
  */
 export async function sendChatMessage(message: string): Promise<ChatResponse> {
   try {
-    return await apiFetch<ChatResponse>("/api/v1/chat", {
+    const raw = await apiFetch<any>("/api/v1/chat", {
       method: "POST",
       body: JSON.stringify({ message }),
     });
+
+    // Normalize backend OpenAPI schema into frontend expected shape
+    const evidenceList: string[] = Array.isArray(raw.evidence)
+      ? raw.evidence
+      : [
+          ...(raw.evidence?.gaps?.map((g: string) => `Target Content Gap: ${g}`) || []),
+          ...(raw.evidence?.trends?.map((t: string) => `High-Momentum Topic: ${t}`) || []),
+          ...(raw.evidence?.content?.length ? [`Grounded in ${raw.evidence.content.length} verified historical publications`] : []),
+        ];
+
+    const memoriesUsed: string[] = Array.isArray(raw.memories_used)
+      ? raw.memories_used
+      : Array.isArray(raw.memories)
+      ? raw.memories.map((m: any) => typeof m === "string" ? m : m.statement || m.key)
+      : [];
+
+    const recommendationsList: Recommendation[] = Array.isArray(raw.recommendations)
+      ? raw.recommendations
+      : raw.recommendation
+      ? [
+          {
+            title: raw.recommendation.title,
+            topic: raw.recommendation.target_topic || raw.recommendation.topic || "AI Strategy",
+            content_type: raw.recommendation.content_type || "Technical Guide",
+            why: raw.recommendation.rationale || "Recommended based on historical performance and gap analysis.",
+            evidence: evidenceList,
+            historical_memory: memoriesUsed,
+            outline: raw.recommendation.outline || [],
+          },
+        ]
+      : [];
+
+    return {
+      answer: raw.answer || "",
+      intent: raw.intent || "content_recommendation",
+      evidence: evidenceList,
+      memories_used: memoriesUsed,
+      recommendations: recommendationsList,
+    };
   } catch (err) {
     console.warn("API /api/v1/chat failed, using fallback mock response:", err);
     // Simulate slight network latency for realistic feel in fallback mode

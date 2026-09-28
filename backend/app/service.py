@@ -15,6 +15,17 @@ from .gaps import get_content_gaps as _analytics_gaps
 from .trends import get_topic_trends as _analytics_trends
 from .models import Organization, Recommendation, RecommendationOutcome
 
+# Convenience module-level exports matching analytics functions
+get_content_overview = _analytics_overview
+get_top_topics = _analytics_top_topics
+get_low_performing_topics = _analytics_low_topics
+get_content_type_performance = _analytics_ctype_perf
+get_topic_frequency = _analytics_topic_freq
+get_topic_recency = _analytics_topic_recency
+get_content_history = _analytics_history
+get_content_gaps = _analytics_gaps
+get_topic_trends = _analytics_trends
+
 
 def get_brand_voice(organization_slug: str = "novastack") -> Dict[str, List[str]]:
     """

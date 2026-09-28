@@ -35,7 +35,11 @@ from .schemas import (
     ChatRequest,
     ChatResponse,
     ChatEvidence,
-    ChatMemoryItem
+    ChatMemoryItem,
+    MemoryRetainRequest,
+    MemoryItemSchema,
+    MemoryRecallRequest,
+    MemoryRecallResponse
 )
 
 # Root router for /health
@@ -279,4 +283,75 @@ def chat_endpoint(req: ChatRequest, db: Session = Depends(get_db)):
             trends=[t["topic"] for t in trends if t["status"] == "growing"]
         ),
         memories=memories_list
+    )
+
+
+# 13. Memory Retain Endpoint: POST /api/v1/memory/retain
+@api_router.post("/memory/retain", response_model=MemoryItemSchema, tags=["Memory Hub"])
+def memory_retain_endpoint(req: MemoryRetainRequest):
+    import os
+    import time
+    from datetime import datetime, timezone
+
+    bank_id = os.getenv("HINDSIGHT_BANK_ID", "content-strategy-main-v3")
+    api_key = os.getenv("HINDSIGHT_API_KEY")
+    base_url = os.getenv("HINDSIGHT_BASE_URL", "https://api.hindsight.vectorize.io")
+    mem_id = f"mem-{int(time.time() * 1000)}"
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    if api_key:
+        try:
+            from hindsight_client import Hindsight
+            with Hindsight(base_url=base_url, api_key=api_key) as hs:
+                hs.retain(
+                    bank_id=bank_id,
+                    content=req.content,
+                    document_id=mem_id,
+                    metadata={"memoryType": req.memoryType, "source": req.source}
+                )
+        except Exception as e:
+            print(f"Hindsight Cloud retain failed: {e}")
+
+    return MemoryItemSchema(
+        id=mem_id,
+        memoryType=req.memoryType,
+        content=req.content,
+        source=req.source,
+        timestamp=today_str
+    )
+
+
+# 14. Memory Recall Endpoint: POST /api/v1/memory/recall
+@api_router.post("/memory/recall", response_model=MemoryRecallResponse, tags=["Memory Hub"])
+def memory_recall_endpoint(req: MemoryRecallRequest):
+    import os
+    from datetime import datetime, timezone
+
+    bank_id = os.getenv("HINDSIGHT_BANK_ID", "content-strategy-main-v3")
+    api_key = os.getenv("HINDSIGHT_API_KEY")
+    base_url = os.getenv("HINDSIGHT_BASE_URL", "https://api.hindsight.vectorize.io")
+    memories: List[MemoryItemSchema] = []
+
+    if api_key and req.query.strip():
+        try:
+            from hindsight_client import Hindsight
+            with Hindsight(base_url=base_url, api_key=api_key) as hs:
+                resp = hs.recall(bank_id=bank_id, query=req.query)
+                results = getattr(resp, "results", [])
+                for idx, r in enumerate(results[:req.limit]):
+                    doc_id = getattr(r, "id", f"mem-{idx}")
+                    text = getattr(r, "text", str(r))
+                    memories.append(MemoryItemSchema(
+                        id=str(doc_id),
+                        memoryType="hindsight_recall",
+                        content=text,
+                        source="hindsight_cloud",
+                        timestamp=datetime.now(timezone.utc).strftime("%Y-%m-%d")
+                    ))
+        except Exception as e:
+            print(f"Hindsight Cloud recall failed: {e}")
+
+    return MemoryRecallResponse(
+        memories=memories,
+        query=req.query
     )
