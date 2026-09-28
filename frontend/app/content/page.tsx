@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-
 import {
   Activity,
   ArrowUpRight,
@@ -19,7 +18,7 @@ import {
 } from "lucide-react";
 
 type ContentItem = {
-  id: string;
+  id?: string;
   title: string;
   topic: string;
   type: string;
@@ -32,7 +31,6 @@ type ContentItem = {
 
 const contentData: ContentItem[] = [
   {
-    id: "1",
     title: "Building Production-Ready AI Agents",
     topic: "AI Agents",
     type: "Technical Guide",
@@ -43,7 +41,6 @@ const contentData: ContentItem[] = [
     views: "18.4K",
   },
   {
-    id: "2",
     title: "10 Developer Tools You Should Know",
     topic: "Developer Tools",
     type: "Blog",
@@ -54,7 +51,6 @@ const contentData: ContentItem[] = [
     views: "14.7K",
   },
   {
-    id: "3",
     title: "Automating Your Engineering Workflow",
     topic: "Automation",
     type: "Tutorial",
@@ -65,7 +61,6 @@ const contentData: ContentItem[] = [
     views: "12.2K",
   },
   {
-    id: "4",
     title: "AI Agents for Cybersecurity Teams",
     topic: "Cybersecurity",
     type: "Research",
@@ -76,7 +71,6 @@ const contentData: ContentItem[] = [
     views: "—",
   },
   {
-    id: "5",
     title: "Understanding LLM Tool Calling",
     topic: "AI Agents",
     type: "Technical Guide",
@@ -87,7 +81,6 @@ const contentData: ContentItem[] = [
     views: "16.8K",
   },
   {
-    id: "6",
     title: "The Future of Generic AI News",
     topic: "AI News",
     type: "Article",
@@ -98,7 +91,6 @@ const contentData: ContentItem[] = [
     views: "21.3K",
   },
   {
-    id: "7",
     title: "Building Reliable RAG Pipelines",
     topic: "AI Agents",
     type: "Tutorial",
@@ -109,7 +101,6 @@ const contentData: ContentItem[] = [
     views: "11.9K",
   },
   {
-    id: "8",
     title: "AI + Finance: What Developers Need to Know",
     topic: "Finance",
     type: "Article",
@@ -146,13 +137,10 @@ export default function ContentPage() {
   const [type, setType] = useState("All Types");
 
   const filteredContent = useMemo(() => {
-    const searchValue = search.toLowerCase().trim();
-
     return contentData.filter((item) => {
       const matchesSearch =
-        searchValue === "" ||
-        item.title.toLowerCase().includes(searchValue) ||
-        item.topic.toLowerCase().includes(searchValue);
+        item.title.toLowerCase().includes(search.toLowerCase()) ||
+        item.topic.toLowerCase().includes(search.toLowerCase());
 
       const matchesTopic =
         topic === "All Topics" || item.topic === topic;
@@ -171,7 +159,7 @@ export default function ContentPage() {
         {/* SIDEBAR */}
         <aside className="hidden w-64 shrink-0 border-r border-white/[0.07] bg-[#0a0e16] lg:flex lg:flex-col">
 
-          {/* LOGO */}
+          {/* Logo */}
           <div className="border-b border-white/[0.07] px-5 py-5">
             <Link href="/" className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-cyan-400">
@@ -190,8 +178,9 @@ export default function ContentPage() {
             </Link>
           </div>
 
-          {/* NAVIGATION */}
+          {/* Navigation */}
           <div className="px-3 py-5">
+
             <p className="mb-3 px-3 text-[9px] font-medium uppercase tracking-[0.2em] text-white/20">
               Workspace
             </p>
@@ -228,7 +217,7 @@ export default function ContentPage() {
             />
           </div>
 
-          {/* MEMORY STATUS */}
+          {/* Memory */}
           <div className="mt-auto p-4">
             <div className="rounded-2xl border border-violet-400/10 bg-violet-500/[0.07] p-4">
 
@@ -245,10 +234,7 @@ export default function ContentPage() {
                 strategic decisions.
               </p>
 
-              <button
-                type="button"
-                className="mt-4 flex items-center gap-1 text-[11px] text-violet-300"
-              >
+              <button className="mt-4 flex items-center gap-1 text-[11px] text-violet-300">
                 Explore memory
                 <ArrowUpRight className="h-3 w-3" />
               </button>
@@ -285,6 +271,7 @@ export default function ContentPage() {
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-500 text-[10px] font-semibold">
                 NS
               </div>
+
             </div>
           </header>
 
@@ -296,15 +283,13 @@ export default function ContentPage() {
 
               <div>
                 <div className="flex items-center gap-2">
-
                   <h2 className="text-2xl font-semibold tracking-tight">
                     Your Content
                   </h2>
 
                   <span className="rounded-full border border-white/[0.07] bg-white/[0.04] px-2 py-1 text-[9px] text-white/35">
-                    {contentData.length} total
+                    127 total
                   </span>
-
                 </div>
 
                 <p className="mt-2 max-w-xl text-xs leading-5 text-white/30">
@@ -313,10 +298,7 @@ export default function ContentPage() {
                 </p>
               </div>
 
-              <button
-                type="button"
-                className="flex w-fit items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-semibold text-black transition hover:bg-white/90"
-              >
+              <button className="flex w-fit items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-xs font-semibold text-black transition hover:bg-white/90">
                 <Plus className="h-4 w-4" />
                 Add Content
               </button>
@@ -386,10 +368,7 @@ export default function ContentPage() {
 
                 </div>
 
-                <button
-                  type="button"
-                  className="flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] text-white/60"
-                >
+                <button className="flex w-fit items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] text-white/60">
                   Analyze pattern
                   <ArrowUpRight className="h-3 w-3" />
                 </button>
@@ -402,7 +381,7 @@ export default function ContentPage() {
 
               <div className="flex flex-col gap-3 lg:flex-row">
 
-                {/* SEARCH */}
+                {/* Search */}
                 <div className="relative flex-1">
 
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/25" />
@@ -416,7 +395,7 @@ export default function ContentPage() {
 
                 </div>
 
-                {/* TOPIC */}
+                {/* Topic */}
                 <div className="relative">
 
                   <select
@@ -425,9 +404,7 @@ export default function ContentPage() {
                     className="h-10 min-w-[160px] appearance-none rounded-xl border border-white/[0.07] bg-[#0b0f17] px-4 pr-9 text-xs text-white/60 outline-none"
                   >
                     {topics.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
+                      <option key={item}>{item}</option>
                     ))}
                   </select>
 
@@ -435,7 +412,7 @@ export default function ContentPage() {
 
                 </div>
 
-                {/* TYPE */}
+                {/* Type */}
                 <div className="relative">
 
                   <select
@@ -444,9 +421,7 @@ export default function ContentPage() {
                     className="h-10 min-w-[160px] appearance-none rounded-xl border border-white/[0.07] bg-[#0b0f17] px-4 pr-9 text-xs text-white/60 outline-none"
                   >
                     {types.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
+                      <option key={item}>{item}</option>
                     ))}
                   </select>
 
@@ -454,10 +429,7 @@ export default function ContentPage() {
 
                 </div>
 
-                <button
-                  type="button"
-                  className="flex h-10 items-center justify-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 text-xs text-white/50"
-                >
+                <button className="flex h-10 items-center justify-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.03] px-4 text-xs text-white/50">
                   <Filter className="h-3.5 w-3.5" />
                   More Filters
                 </button>
@@ -485,10 +457,7 @@ export default function ContentPage() {
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  className="flex items-center gap-2 rounded-lg border border-white/[0.07] px-3 py-2 text-[10px] text-white/40"
-                >
+                <button className="flex items-center gap-2 rounded-lg border border-white/[0.07] px-3 py-2 text-[10px] text-white/40">
                   Sort by
                   <ChevronDown className="h-3 w-3" />
                 </button>
@@ -538,7 +507,7 @@ export default function ContentPage() {
                     {filteredContent.length > 0 ? (
                       filteredContent.map((item) => (
                         <ContentRow
-                          key={item.id}
+                          key={item.title}
                           item={item}
                         />
                       ))
@@ -576,31 +545,19 @@ export default function ContentPage() {
 
                 <div className="flex gap-2">
 
-                  <button
-                    type="button"
-                    className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/25"
-                  >
+                  <button className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/25">
                     Previous
                   </button>
 
-                  <button
-                    type="button"
-                    className="rounded-lg border border-white/[0.07] bg-white/[0.05] px-3 py-1.5 text-[10px] text-white/60"
-                  >
+                  <button className="rounded-lg border border-white/[0.07] bg-white/[0.05] px-3 py-1.5 text-[10px] text-white/60">
                     1
                   </button>
 
-                  <button
-                    type="button"
-                    className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/40"
-                  >
+                  <button className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/40">
                     2
                   </button>
 
-                  <button
-                    type="button"
-                    className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/40"
-                  >
+                  <button className="rounded-lg border border-white/[0.07] px-3 py-1.5 text-[10px] text-white/40">
                     Next
                   </button>
 
@@ -623,7 +580,6 @@ export default function ContentPage() {
               </span>
 
             </footer>
-
           </div>
         </div>
       </div>
@@ -631,9 +587,7 @@ export default function ContentPage() {
   );
 }
 
-/* =========================================================
-   NAV ITEM
-========================================================= */
+/* ---------------- COMPONENTS ---------------- */
 
 function NavItem({
   href,
@@ -664,9 +618,6 @@ function NavItem({
   );
 }
 
-/* =========================================================
-   STAT CARD
-========================================================= */
 
 function StatCard({
   icon,
@@ -708,9 +659,6 @@ function StatCard({
   );
 }
 
-/* =========================================================
-   CONTENT ROW
-========================================================= */
 
 function ContentRow({
   item,
@@ -720,7 +668,7 @@ function ContentRow({
   return (
     <tr className="group border-b border-white/[0.04] transition hover:bg-white/[0.025]">
 
-      {/* CONTENT */}
+      {/* Content */}
       <td className="px-5 py-4">
 
         <div className="flex items-center gap-3">
@@ -745,7 +693,7 @@ function ContentRow({
 
       </td>
 
-      {/* TOPIC */}
+      {/* Topic */}
       <td className="py-4">
 
         <span className="rounded-md bg-white/[0.04] px-2 py-1 text-[9px] text-white/40">
@@ -754,7 +702,7 @@ function ContentRow({
 
       </td>
 
-      {/* TYPE */}
+      {/* Type */}
       <td className="py-4">
 
         <span className="text-[10px] text-white/35">
@@ -763,22 +711,24 @@ function ContentRow({
 
       </td>
 
-      {/* STATUS */}
+      {/* Status */}
       <td className="py-4">
+
         <StatusBadge status={item.status} />
+
       </td>
 
-      {/* DATE */}
+      {/* Date */}
       <td className="py-4 text-[10px] text-white/30">
         {item.date}
       </td>
 
-      {/* VIEWS */}
+      {/* Views */}
       <td className="py-4 text-[10px] text-white/40">
         {item.views}
       </td>
 
-      {/* ENGAGEMENT */}
+      {/* Engagement */}
       <td className="px-5 py-4 text-right">
 
         {item.engagementValue > 0 ? (
@@ -811,9 +761,6 @@ function ContentRow({
   );
 }
 
-/* =========================================================
-   STATUS BADGE
-========================================================= */
 
 function StatusBadge({
   status,

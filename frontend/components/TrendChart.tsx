@@ -12,12 +12,15 @@ import {
 
 interface TopicChartProps {
   data: {
-    topic: string;
+    topic?: string;
+    month?: string;
     performance: number;
   }[];
 }
 
 export default function TopicChart({ data }: TopicChartProps) {
+  const dataKey = data.length > 0 && "month" in data[0] ? "month" : "topic";
+
   return (
     <div className="rounded-2xl border border-gray-800 bg-gray-900 p-6 shadow-sm">
       <div className="mb-6">
@@ -39,7 +42,7 @@ export default function TopicChart({ data }: TopicChartProps) {
             />
 
             <XAxis
-              dataKey="topic"
+              dataKey={dataKey}
               tick={{ fill: "#9CA3AF", fontSize: 12 }}
               axisLine={{ stroke: "#4B5563" }}
               tickLine={{ stroke: "#4B5563" }}
