@@ -24,6 +24,11 @@ const navigation = [
     href: "/memory",
     icon: "🧠",
   },
+  {
+    name: "Recommendations",
+    href: "/recommendations",
+    icon: "🎯",
+  },
 ];
 
 export default function Sidebar() {
