@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import {
   ChatResponse,
+=======
+import type {
+>>>>>>> d3912e4 (Added content)
   ContentItem,
   Memory,
   Recommendation,
@@ -7,6 +11,7 @@ import {
 
 export const dashboardData = {
   totalContent: 128,
+
   totalTopics: 24,
 
   bestTopics: [
@@ -40,6 +45,7 @@ export const contentData: ContentItem[] = [
     performance: 92,
     source: "Blog",
   },
+
   {
     id: "2",
     title: "Introduction to RAG",
@@ -49,6 +55,7 @@ export const contentData: ContentItem[] = [
     performance: 86,
     source: "Blog",
   },
+
   {
     id: "3",
     title: "Developer Productivity Tools",
@@ -58,6 +65,7 @@ export const contentData: ContentItem[] = [
     performance: 78,
     source: "LinkedIn",
   },
+
   {
     id: "4",
     title: "Latest Product Updates",
@@ -77,6 +85,7 @@ export const memories: Memory[] = [
     source: "analytics",
     timestamp: "2026-09-28",
   },
+
   {
     id: "2",
     memoryType: "content_gap",
@@ -84,6 +93,7 @@ export const memories: Memory[] = [
     source: "analytics",
     timestamp: "2026-09-28",
   },
+
   {
     id: "3",
     memoryType: "brand_voice",
@@ -94,19 +104,27 @@ export const memories: Memory[] = [
 ];
 
 export const recommendation: Recommendation = {
-  title: "AI + Cybersecurity: Building a Security-Focused AI Agent",
+  title:
+    "AI + Cybersecurity: Building a Security-Focused AI Agent",
+
   topic: "AI + Cybersecurity",
+
   content_type: "Tutorial",
-  why: "This topic addresses an identified content gap while building on historically strong AI-agent content.",
+
+  why:
+    "This topic addresses an identified content gap while building on historically strong AI-agent content.",
+
   evidence: [
     "AI-agent tutorials perform strongly.",
     "AI + cybersecurity is underrepresented.",
     "Technical tutorials have strong engagement.",
   ],
+
   historical_memory: [
     "AI-agent tutorials historically perform strongly.",
     "Technical, concise, practical content matches the brand voice.",
   ],
+
   outline: [
     "Introduction",
     "AI agent security risks",
@@ -117,6 +135,7 @@ export const recommendation: Recommendation = {
   ],
 };
 
+<<<<<<< HEAD
 export const beforeAfterDemoData = {
   before: {
     title: "Overview of AI Security Trends",
@@ -241,3 +260,63 @@ export function getMockChatResponse(message: string): ChatResponse {
     recommendations: [recommendation]
   };
 }
+=======
+export const topicPerformanceData = [
+  {
+    topic: "AI Agents",
+    performance: 92,
+  },
+
+  {
+    topic: "Developer Tools",
+    performance: 78,
+  },
+
+  {
+    topic: "Machine Learning",
+    performance: 74,
+  },
+
+  {
+    topic: "Generative AI",
+    performance: 68,
+  },
+
+  {
+    topic: "Cloud",
+    performance: 61,
+  },
+];
+
+export const trendData = [
+  {
+    month: "Apr",
+    performance: 54,
+  },
+
+  {
+    month: "May",
+    performance: 61,
+  },
+
+  {
+    month: "Jun",
+    performance: 58,
+  },
+
+  {
+    month: "Jul",
+    performance: 69,
+  },
+
+  {
+    month: "Aug",
+    performance: 76,
+  },
+
+  {
+    month: "Sep",
+    performance: 82,
+  },
+];
+>>>>>>> d3912e4 (Added content)
